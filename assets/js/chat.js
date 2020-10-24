@@ -26,8 +26,16 @@ $(document).ready(function() {
   }
 
   function callChatbotApi(message) {
-    // params, body, additionalParams
-    return sdk.chatbotPost({}, {
+    // CHAT MAIN POST METHOD
+    // params, body, additionalParams 
+    return sdk.chatbotPost({
+      headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Headers': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
+        }
+    }, {
       messages: [{
         type: 'unstructured',
         unstructured: {
@@ -38,6 +46,7 @@ $(document).ready(function() {
   }
 
   function insertMessage() {
+    // Captures user input in msg
     msg = $('.message-input').val();
     if ($.trim(msg) == '') {
       return false;
@@ -56,7 +65,7 @@ $(document).ready(function() {
           console.log('received ' + data.messages.length + ' messages');
 
           var messages = data.messages;
-
+          console.log('messages', messages)
           for (var message of messages) {
             if (message.type === 'unstructured') {
               insertResponseMessage(message.unstructured.text);
@@ -66,7 +75,7 @@ $(document).ready(function() {
               insertResponseMessage(message.structured.text);
 
               setTimeout(function() {
-                html = '<img src="' + message.structured.payload.imageUrl + '" witdth="200" height="240" class="thumbnail" /><b>' +
+                html = '<img src="' + message.structured.payload.imageUrl + '" width="200" height="240" class="thumbnail" /><b>' +
                   message.structured.payload.name + '<br>$' +
                   message.structured.payload.price +
                   '</b><br><a href="#" onclick="' + message.structured.payload.clickAction + '()">' +
