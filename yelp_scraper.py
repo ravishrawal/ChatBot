@@ -1,5 +1,8 @@
 import requests
 import json
+import time
+import dynamodb as dydb
+from decimal import Decimal
 
 url = 'https://api.yelp.com/v3/businesses/search'
 
@@ -13,7 +16,7 @@ def yelp_get(params):
 	#Req
 	response = requests.get(url, params = params, headers = headers)
 	#Res
-	res = json.loads(response.text)
+	res = json.loads(response.text,parse_float=Decimal)
 
 	#Capture all results
 	output_list = []
@@ -29,20 +32,39 @@ def yelp_get(params):
 			data['rating'] = restaurant['rating']
 			output_list.append(data)
 		except:
-			print('this one failed')
-			
+			print('this one failed')			
 	return output_list
 
+# Get dynamo db object
+table_name = 'yelp-restaurants'
+db = dydb.mydb(table_name)
+# db.table.meta.client.get_waiter('table_exists').wait(TableName=table_name)
+print(db.table.creation_date_time)
 
-# Use Get Req
-cuisine = 'mexican'
-location = 'manhattan'
+populate = False
 
-search_params = {
-	"categories": cuisine,
-	"location": location,
-	"limit": 50,
-}
+if populate:
+	cuisines = ['mexican', 'indian', 'chinese', 'italian', 'american']
+	location = 'manhattan'
 
-output = yelp_get(search_params)
-print(len(output))
+	for cuisine in cuisines:
+		count = 0 
+		while count < 1000:	
+			search_params = {
+				"categories": cuisine,
+				"location": location,
+				"limit": 50,
+				"offset": count
+			}	
+			output = yelp_get(search_params)
+			count += len(output)
+			db.write(output)
+
+# print("item count:", len(db.table.scan()))
+
+
+
+
+
+
+
