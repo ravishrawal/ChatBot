@@ -67,7 +67,7 @@ class mydb():
 
 
     def query(self, dinnerSpecs):
-        response = table.scan(
+        response = table.scan(FilterExpression =
             Attr('location.city').eq(dinnerSpecs["location"]) & 
             Attr('cuisine').eq(dinnerSpecs["cuisine"])
             )

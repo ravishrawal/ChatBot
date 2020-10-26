@@ -3,6 +3,7 @@ import json
 import time
 import dynamodb as dydb
 from decimal import Decimal
+from boto3.dynamodb.conditions import Key, Attr
 
 url = 'https://api.yelp.com/v3/businesses/search'
 
@@ -30,6 +31,7 @@ def yelp_get(params):
 			data['location'] = restaurant['location']
 			data['phone'] = restaurant['display_phone']
 			data['rating'] = restaurant['rating']
+			data['cuisine'] = params['categories']
 			output_list.append(data)
 		except:
 			print('this one failed')			
@@ -41,7 +43,7 @@ db = dydb.mydb(table_name)
 # db.table.meta.client.get_waiter('table_exists').wait(TableName=table_name)
 print(db.table.creation_date_time)
 
-populate = False
+populate = True 
 
 if populate:
 	cuisines = ['mexican', 'indian', 'chinese', 'italian', 'american']
@@ -58,9 +60,11 @@ if populate:
 			}	
 			output = yelp_get(search_params)
 			count += len(output)
-			db.write(output)
+			# db.write(output)
+			for restaurant in output:
+				db.table.delete_item(Key = {'id': restaurant["id"]}, ConditionExpression = Attr('cuisine').not_exists())
 
-# print("item count:", len(db.table.scan()))
+print("item count:", len(db.table.scan()))
 
 
 
