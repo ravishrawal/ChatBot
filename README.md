@@ -6,8 +6,8 @@ A dinner recommendation chatbot which uses ASR & NLU through AWS Lex to conversa
 
 
 ### Authors ###
-1. Ravish Rawal (rr2914)
-2. Viren Bajaj (vb2519)
+1. Ravish Rawal
+2. Viren Bajaj
 
 ## Usage ##
 Chat with the bot to get dining recommendations in NYC: 
