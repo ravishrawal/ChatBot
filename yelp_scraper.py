@@ -4,7 +4,7 @@ import time
 import dynamodb as dydb
 from decimal import Decimal
 from boto3.dynamodb.conditions import Key, Attr
-
+import elastic_search
 url = 'https://api.yelp.com/v3/businesses/search'
 
 API_KEY = 'W6x38pcDKTCTwHr7PSN8OPBjmqzmxFMiWYAqZajEe5_3aVH9fd-ts9B-y1Fg4bhh4-UFUZuJ9yptqwZbZExbg0oA0HxyIAK8n9u3dn8-Hof3L2HQ1VnvhATEA4OUX3Yx'
@@ -39,11 +39,23 @@ def yelp_get(params):
 
 # Get dynamo db object
 table_name = 'yelp-restaurants'
-db = dydb.mydb(table_name)
+DB = dydb.mydb(table_name)
 # db.table.meta.client.get_waiter('table_exists').wait(TableName=table_name)
-print(db.table.creation_date_time)
+print(DB.table.creation_date_time)
 
-populate = True 
+# response = DB.table.scan(FilterExpression = 
+#                     Attr('cuisine').eq('american') &
+#                     Attr('location.city').eq('New York'))
+# print(response['Items'][:5])
+# Create elastic search session
+ES = elastic_search.myes()
+# print(ES.awsauth)
+# print(ES.es)
+# ES.es.indices.create(index='restaurants')
+# print(ES.es.indices.ping())
+populate = False
+dynamo = False
+elasticsearch = False
 
 if populate:
 	cuisines = ['mexican', 'indian', 'chinese', 'italian', 'american']
@@ -60,11 +72,11 @@ if populate:
 			}	
 			output = yelp_get(search_params)
 			count += len(output)
-			# db.write(output)
-			for restaurant in output:
-				db.table.delete_item(Key = {'id': restaurant["id"]}, ConditionExpression = Attr('cuisine').not_exists())
-
-print("item count:", len(db.table.scan()))
+			if dynamo:
+				DB.write(output)
+			if elasticsearch:
+				ES.bulk_index(data=output)
+			# break
 
 
 
