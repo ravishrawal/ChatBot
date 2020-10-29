@@ -1,0 +1,14 @@
+{'Records': 
+[
+{'messageId': '727d27f4-553b-4134-bd78-4d0bd8a2ba39', 'receiptHandle': 'AQEBRjgSiTDESBMrj7ImmFja+mssPWz/UzLwiBZJp+P85HP5FCuy1dFB/fS0H+bX/bIiaO0uXPtBdBruXcHbnclJLW2fh/urPHnDoD0cnySL7FjTSk7Ub0pmdGjhMEkvZghPXHmeWtlvyebMZrQEW5cm3Qj7sC5lM6jpRTIHXxo8QKTwMpbyDmkg4Pj9VUcKTTy+kHRDky76YE3+2ertxXDnIYvU6S3z88UPyj9JSdFOqkcqR4CUJY9FsWAZ60fJjbYX27Quvjw7xD+lQLIg46zl0AWnzYTzW6owBCoJ2exa62z51rUBvweFJI/Ojh7E7ZsUyTN4Bfo9Vhd1zPQhBw1OR4lrHh0Hhv68GPhg3Rb+DcEqXVAiIPJRttc/VZqXlyF56UZhNNuK4c1cHvH34/TaEA==', 
+'body': 'Dinner Specs', 
+'attributes': {'ApproximateReceiveCount': '18', 'SentTimestamp': '1603834832354', 'SenderId': 'AROAXFPNKTVFQVQJW3UVC:ChatBot-LF1', 'ApproximateFirstReceiveTimestamp': '1603834832354'}, 'messageAttributes': 
+{'Cuisine': {'stringValue': 'american', 'stringListValues': [], 'binaryListValues': [], 'dataType': 'String'}, 
+'NumberOfPeople': {'stringValue': '2', 'stringListValues': [], 'binaryListValues': [], 'dataType': 'String'}, 
+'PhoneNumber': {'stringValue': '4127374028', 'stringListValues': [], 'binaryListValues': [], 'dataType': 'String'}, 
+'DiningTime': {'stringValue': '20:00', 'stringListValues': [], 'binaryListValues': [], 'dataType': 'String'}, 
+'Location': {'stringValue': 'new york', 'stringListValues': [], 'binaryListValues': [], 'dataType': 'String'}},
+
+ 'md5OfMessageAttributes': '64934820bddc0cae53acf9322dff94ae', 'md5OfBody': '205c990ff2523cef9e10e8b87d9e1b2e', 'eventSource': 'aws:sqs', 'eventSourceARN': 'arn:aws:sqs:us-east-1:492808346955:DinnerSpecs', 'awsRegion': 'us-east-1'}
+
+]}

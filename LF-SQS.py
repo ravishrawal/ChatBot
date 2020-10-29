@@ -4,7 +4,36 @@ from boto3.dynamodb.conditions import Key, Attr
 import logging
 
 
-
+def receive_and_delete_msg_poll():
+    # Create SQS client
+    sqs = boto3.client('sqs')
+    
+    queue_url = 'https://sqs.us-east-1.amazonaws.com/492808346955/DinnerSpecs'
+    
+    # Long poll for message on provided SQS queue
+    response = sqs.receive_message(
+        QueueUrl=queue_url,
+        MaxNumberOfMessages=10,
+        MessageAttributeNames=[
+            'All'
+        ],
+        WaitTimeSeconds=10
+    )
+    results = []
+    
+    print(f"RESPONSE: {response}")
+    try:
+        for record in response["Messages"]:
+            receipt_handle = record["ReceiptHandle"]
+            sqs.delete_message(
+                    QueueUrl=queue_url,
+                    ReceiptHandle=receipt_handle)
+            results.append(record["MessageAttributes"])
+    except:
+        print("no msg")
+    return results
+    
+    
 def receive_and_delete_msg(records):
     #TODO handle multiple records
     sqs = boto3.client('sqs')
@@ -81,6 +110,18 @@ def send_text(results,spec):
 
     logger.info(response)
 
+def parse_details_poll(dinnerDetails):
+    specs = []
+    for record in dinnerDetails:
+        spec = {}
+        spec['Location'] = record["Location"]["StringValue"] 
+        spec['Cuisine'] = record["Cuisine"]["StringValue"]
+        spec['PhoneNumber'] = record["PhoneNumber"]["StringValue"]
+        spec['NumberOfPeople'] = record["NumberOfPeople"]["StringValue"]
+        spec['DiningTime'] = record["DiningTime"]["StringValue"]
+        specs.append(spec)
+    return specs
+    
 def parse_details(dinnerDetails):
     specs = []
     for record in dinnerDetails:
@@ -97,7 +138,8 @@ def lambda_handler(event, context):
     # TODO implement
     print(event)
     dinnerDetails = receive_and_delete_msg(event["Records"])
-    # dinnerDetails = event["Records"]["dinnerSpecs"]
+    # dinnerDetails = receive_and_delete_msg_poll()
+    # dinnerSpecs = parse_details_poll(dinnerDetails)
     dinnerSpecs = parse_details(dinnerDetails)
     for spec in dinnerSpecs:
         results = query_db(spec)

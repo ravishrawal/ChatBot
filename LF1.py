@@ -37,7 +37,7 @@ def lambda_handler(event, context):
         
     elif event['currentIntent']['name'] == 'dinnerSuggestions':
         dinnerDetails = event['currentIntent']['slots']
-        response_message_content = f"Ah so you want {dinnerDetails['Cuisine']} in {dinnerDetails['Location']} at {dinnerDetails['DiningTime']}. {dinnerDetails['NumberOfPeople']} people. We will text you at {dinnerDetails['PhoneNumber']}!"
+        response_message_content = f"Ah, so you want {dinnerDetails['Cuisine']} in {dinnerDetails['Location']} at {dinnerDetails['DiningTime']}. {dinnerDetails['NumberOfPeople']} people. We're texting you five recommendations at {dinnerDetails['PhoneNumber']}!"
         
         queue_message(dinnerDetails)
         
@@ -53,5 +53,5 @@ def lambda_handler(event, context):
             },
         }
         
-    
+      
     return outgoing_response
