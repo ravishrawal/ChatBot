@@ -2,12 +2,12 @@
 
 ## About ##
 
-HW 1 of the Cloud Computing & Big Data class at Columbia University and New York University.
+A dinner recommendation chatbot which uses ASR & NLU through AWS Lex to conversationally receive user information and send a text message with restaurant suggestions to your phone. Built on a cloud stack (AWS S3, DynamoDB, ElasticSearch, Lambda, SQS, SNS, API gateway, Lex) with a little help from the Yelp API. 
 
 
 ### Authors ###
-1. Ravish Rawal (rr2914)
-2. Viren Bajaj (vb2519)
+1. Ravish Rawal
+2. Viren Bajaj
 
 ## Usage ##
 Chat with the bot to get dining recommendations in NYC: 
