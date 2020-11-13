@@ -7,7 +7,7 @@ import requests
 
 
 
-class myes():
+class MyES():
 	def __init__(self):
 		self.host = "search-restaurants-ythkwzbi6a5lpqmuchwqxbrpyy.us-east-1.es.amazonaws.com"
 		self.region = 'us-east-1' # e.g. us-west-1
@@ -16,18 +16,19 @@ class myes():
 		self.awsauth = AWS4Auth(self.credentials.access_key, self.credentials.secret_key,
 								self.region, self.service, session_token=self.credentials.token)
 	
-		self.es = self.connect()
+		
 
 
 	def connect(self):
-		es = Elasticsearch(
+		self.es = Elasticsearch(
 			hosts=[{'host': self.host, 'port': 433}],
 			http_auth = self.awsauth,
 			use_ssl = True,
 			verify_certs=True,
 			connection_class = RequestsHttpConnection
 			)
-		return es
+
+		return self.es
 
 
 	def bulk_index(self,index_name='restaurants',data=[]):
@@ -55,3 +56,12 @@ class myes():
 		else:
 			print('done')
 
+	def my_index(data):
+		responses = []
+		for restaurant in data:
+			doc = {	'id': restaurant['id'],
+					'cuisine': restaurant['cuisine']
+					}
+			response = self.es.index(index = "restaurants", body = doc)
+			responses.append(response) 
+		return len(responses),responses 

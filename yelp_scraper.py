@@ -48,11 +48,14 @@ print(DB.table.creation_date_time)
 #                     Attr('location.city').eq('New York'))
 # print(response['Items'][:5])
 # Create elastic search session
-ES = elastic_search.myes()
-# print(ES.awsauth)
-# print(ES.es)
-# ES.es.indices.create(index='restaurants')
-# print(ES.es.indices.ping())
+ES = elastic_search.MyES()
+
+ES_connect = ES.connect()
+print('AWS Auth: ', ES.awsauth)
+print('AWS Creds', ES.credentials.get_frozen_credentials())
+print(ES_connect)
+# ES_connect.indices.create(index='restaurants')
+print("Indices: ", ES_connect.indices.get_alias().keys())
 populate = False
 dynamo = False
 elasticsearch = False
@@ -62,6 +65,7 @@ if populate:
 	location = 'manhattan'
 
 	for cuisine in cuisines:
+		t0 = time.time()
 		count = 0 
 		while count < 1000:	
 			search_params = {
@@ -70,13 +74,24 @@ if populate:
 				"limit": 50,
 				"offset": count
 			}	
+			# scrape yelp for 1000 restaurants
 			output = yelp_get(search_params)
 			count += len(output)
 			if dynamo:
 				DB.write(output)
 			if elasticsearch:
-				ES.bulk_index(data=output)
-			# break
+				# ES_connect.my_bulk_index(data=output)
+				responses = []
+				for restaurant in output:
+					doc = {'restaurantId': restaurant['id'],
+						'cuisine': restaurant['cuisine']
+						}
+					print(doc)
+					response = ES_connect.index(index = "restaurants", body = doc)
+					responses.append(response) 
+			t1 = time.time()
+			print(f"time taken for {cuisine}: {t1-t0}")
+			break
 
 
 
