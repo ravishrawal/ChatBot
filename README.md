@@ -11,7 +11,7 @@ A dinner recommendation chatbot which uses ASR & NLU through AWS Lex to conversa
 
 ## Usage ##
 Chat with the bot to get dining recommendations in NYC: 
-https://cloud-chatbot-rav-viren.s3.amazonaws.com/chat.html
+http://cloud-chatbot-rav-viren.s3-website-us-east-1.amazonaws.com/
 
 
 ## Lambda Functions ##
