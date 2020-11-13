@@ -21,7 +21,7 @@ class MyES():
 
 	def connect(self):
 		self.es = Elasticsearch(
-			hosts=[{'host': self.host, 'port': 433}],
+			hosts=[{'host': self.host, 'port': 443}],
 			http_auth = self.awsauth,
 			use_ssl = True,
 			verify_certs=True,

@@ -55,7 +55,27 @@ print('AWS Auth: ', ES.awsauth)
 print('AWS Creds', ES.credentials.get_frozen_credentials())
 print(ES_connect)
 # ES_connect.indices.create(index='restaurants')
-print("Indices: ", ES_connect.indices.get_alias().keys())
+# print("Indices: ", ES_connect.indices.get_alias().keys())
+
+# Query ES 
+
+key, value = "cuisine", "chinese"
+es_response = ES_connect.search(index="restaurants", 
+						body={
+							"query": { 
+								"match": {
+									key: value
+								}
+							}
+						})
+es_res = es_response['hits']['hits'] 
+print(len(es_res),es_res)
+
+# query dynamo db
+# for r in es_res:
+# 	rest_id = r['_id']
+# 	# query_db 
+
 populate = False
 dynamo = False
 elasticsearch = False
@@ -80,18 +100,23 @@ if populate:
 			if dynamo:
 				DB.write(output)
 			if elasticsearch:
-				# ES_connect.my_bulk_index(data=output)
+				# elastic_search.my_bulk_index(data=output)
 				responses = []
 				for restaurant in output:
 					doc = {'restaurantId': restaurant['id'],
 						'cuisine': restaurant['cuisine']
 						}
-					print(doc)
+					# print(doc)
 					response = ES_connect.index(index = "restaurants", body = doc)
 					responses.append(response) 
+					
+				# print(f"Response: {response}")
 			t1 = time.time()
 			print(f"time taken for {cuisine}: {t1-t0}")
-			break
+			
+
+
+
 
 
 
