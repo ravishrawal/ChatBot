@@ -137,10 +137,12 @@ def parse_details(dinnerDetails):
 def lambda_handler(event, context):
     # TODO implement
     print(event)
-    dinnerDetails = receive_and_delete_msg(event["Records"])
-    # dinnerDetails = receive_and_delete_msg_poll()
-    # dinnerSpecs = parse_details_poll(dinnerDetails)
-    dinnerSpecs = parse_details(dinnerDetails)
+    # dinnerDetails = receive_and_delete_msg(event["Records"])
+    # dinnerSpecs = parse_details(dinnerDetails)
+    
+    dinnerDetails = receive_and_delete_msg_poll()
+    dinnerSpecs = parse_details_poll(dinnerDetails)
+    
     for spec in dinnerSpecs:
         results = query_db(spec)
         send_text(results,spec)
